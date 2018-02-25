@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 class PoolController extends Controller
 {
     /**
@@ -16,10 +18,10 @@ class PoolController extends Controller
 
 
 
-    public function findPool()
+    public function findPool(Request $req)
     {
         return response()
-            ->json(['group_name' => 'Abigail', 'state' => 'CA']);
+            ->json($req->all());
 
     }
 

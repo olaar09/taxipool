@@ -3,57 +3,45 @@ var findpoolUrl = '/findpool';
 
 
 var locations = {
-    destination : null,
-    pickup : null
+    'destination' : null,
+    'pickup' : null
 }
 
-function makeRequestGet(url, successCallBack, errorCallBack) {
-    $.ajax({
-        url: url,
-        type: 'GET',
-        contentType: false,
-        processData: false,
-        crossDomain: true,
-        success: function(response) {
-            //console.log(response);
-            successCallBack(response);
-            return false;
-        },
-        error: function(jqXHR, textStatus, errorMessage) {
-            errorCallBack(jqXHR);
-        },
-    });
+function makeRequestGet(url, successCallBack, errorCallBack, data) {
+    $.post(url, data, successCallBack).
+    fail(function (err) {
+        errorCallBack(err)
+    })
 }
 
 function findPool(e) {
     e.preventDefault();
     var phone = 08182299393;
-    var location = '';
-    var destination = '';
-
-    makeRequestGet(baseUrl+findpoolUrl, function (data) {
-        console.log(data);
-    }, findFailed)
+    if(locations.destination !== null && locations.pickup !== null){
+        makeRequestGet(baseUrl+findpoolUrl, afterFind, findFailed, locations)
+    }else {
+        console.log("Please set location first");
+    }
 }
 
 function afterFind(data) {
     console.log(data);
 }
 
-function findFailed() {
+function findFailed(data) {
     console.log(data)
 }
 
 
 function setPickLocation() {
     googleApiAutoComplete('pickup_area', function(place){
-        locations.pickup = place.id;
+        locations.pickup = place.place_id;
     });
 }
 
 function setDestination(){
     googleApiAutoComplete('destination_area', function(place){
-        locations.destination = place.id;
+        locations.destination = place.place_id;
     });
 }
 
