@@ -2,23 +2,44 @@ var baseUrl = 'http://127.0.0.1:8000';
 var findpoolUrl = '/findpool';
 
 
-var locations = {
+var requestData = {
     'destination' : null,
-    'pickup' : null
+    'pickup' : null,
+    'phone' : null,
+    'email': null,
+    'type' : null,
+    'taxi': null
 }
 
-function makeRequestGet(url, successCallBack, errorCallBack, data) {
+function makePostRequest(url, successCallBack, errorCallBack, data) {
     $.post(url, data, successCallBack).
     fail(function (err) {
         errorCallBack(err)
     })
 }
 
+
 function findPool(e) {
     e.preventDefault();
-    var phone = 08182299393;
-    if(locations.destination !== null && locations.pickup !== null){
-        makeRequestGet(baseUrl+findpoolUrl, afterFind, findFailed, locations)
+    if(isContactDataSet()){
+        requestData.phone = $('#contact_phone').val(); //set phone number
+        requestData.email = $('#contact_email').val(); // set email
+
+        makePostRequest(baseUrl+findpoolUrl, afterFind, findFailed, requestData);
+    }else {
+        console.log("Please enter contact details first");
+    }
+}
+
+function nextContactDetails(e) {
+    e.preventDefault();
+    if(isRideDataSet()){
+
+        requestData.taxi = $('#taxi').val(); //set taxi type
+
+        $('#tripInfo').addClass('hide');
+        $('#userInfo').removeClass('hide');
+        $('#userInfo').addClass('animated bounceInRight');
     }else {
         console.log("Please set location first");
     }
@@ -35,14 +56,28 @@ function findFailed(data) {
 
 function setPickLocation() {
     googleApiAutoComplete('pickup_area', function(place){
-        locations.pickup = place.place_id;
+        requestData.pickup = place.place_id;
     });
 }
 
 function setDestination(){
     googleApiAutoComplete('destination_area', function(place){
-        locations.destination = place.place_id;
+        requestData.destination = place.place_id;
     });
+}
+
+
+function isRideDataSet() {
+    return requestData.destination !== null
+        && requestData.pickup !== null &&
+        $('#taxi').val() != 'select platform'
+}
+
+function isContactDataSet() {
+    return $('#contact_phone').val() !== null &&
+         $('#contact_email').val() !== null &&
+         $('#contact_email').val().length > 1 &&
+        $('#contact_phone').val().length > 1;
 }
 
 function googleApiAutoComplete(formId, callBack) {
@@ -73,3 +108,6 @@ function googleApiAutoComplete(formId, callBack) {
         console.log(autocomplete.getPlace());
     });
 }
+
+
+Ladda.bind('button');
