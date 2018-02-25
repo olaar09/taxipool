@@ -48,10 +48,10 @@
                         <div class="col-lg-12 content">
                             <form method="POST">
                                 <div class="form-group">
-                                    <input type="text" placeholder="Enter pick up area" class="form-control">
+                                    <input type="text" onfocus="setPickLocation()" id="pickup_area" placeholder="Enter pick up area" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" placeholder="Enter destination area" class="form-control">
+                                    <input type="text" onfocus="setDestination()" id="destination_area" placeholder="Enter destination area" class="form-control">
                                 </div>
                                 <div class="form-group">
 
@@ -59,6 +59,7 @@
                                         <option>Select Platform</option>
                                         <option>Taxify</option>
                                         <option>Uber</option>
+                                        <option>Yellow cabs</option>
                                     </select>
                                 </div>
 
@@ -85,6 +86,7 @@
 <!-- Javascript -->
 <script src="js/plugins/jquery.min.js"></script>
 <script src="js/plugins/popper.min.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQLyyuaAkiKd3V_Y0yGg0qNGWNDp5Q22I&libraries=places"></script>
 <script src="js/app.js"></script>
 <script src="js/plugins/bootstrap.min.js"></script>
 
